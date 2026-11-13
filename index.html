@@ -1,0 +1,456 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Little Surprise For You 💜</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Georgia, serif;
+  background: linear-gradient(135deg, #fce4ec, #eee2ff, #e1f5fe);
+  color: #49344f;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.card {
+  width: 100%;
+  max-width: 580px;
+  background: rgba(255,255,255,.94);
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 10px 40px #9b75a533;
+  text-align: center;
+}
+
+h1 { color: #9b59a5; }
+h2 { color: #8e579c; }
+
+p { line-height: 1.7; }
+
+button {
+  border: none;
+  background: #a56bb5;
+  color: white;
+  padding: 13px 23px;
+  border-radius: 25px;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 8px 4px;
+}
+
+button:hover { background: #814b91; }
+
+input, textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d9b9e2;
+  border-radius: 12px;
+  margin: 8px 0 15px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+textarea { min-height: 100px; resize: vertical; }
+
+.option {
+  display: block;
+  text-align: left;
+  padding: 13px;
+  border: 1px solid #e3cce9;
+  border-radius: 12px;
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.option:hover { background: #f9edff; }
+
+.option input {
+  width: auto;
+  margin: 0 9px 0 0;
+}
+
+.hidden { display: none; }
+
+.gift {
+  font-size: 90px;
+  cursor: pointer;
+  margin: 25px;
+  transition: .3s;
+}
+
+.gift:hover { transform: scale(1.1) rotate(-5deg); }
+
+.compliment {
+  background: #f8edff;
+  padding: 18px;
+  border-radius: 15px;
+  margin: 20px 0;
+  line-height: 1.7;
+}
+
+.progress {
+  height: 8px;
+  background: #eee0f3;
+  border-radius: 10px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: #ad72bd;
+  transition: .3s;
+}
+
+.small { font-size: 13px; color: #927b96; }
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <!-- Welcome -->
+  <section id="welcome">
+    <h1>A Little Surprise For You 💜</h1>
+    <p>Someone has prepared a little surprise just for you.</p>
+    <div class="gift" onclick="openGift()">🎁</div>
+    <p>Tap the gift box to open it!</p>
+  </section>
+
+  <!-- Introduction -->
+  <section id="intro" class="hidden">
+    <h1>Surprise! ✨</h1>
+    <p>
+      No expensive gifts today,
+      some sweet compliments, and a little memory.
+    </p>
+    <input id="friendName" placeholder="Your name..." required>
+    <input id="nickname" placeholder="Your nickname (optional)">
+    <button onclick="startQuestions()">Let's Begin 💜</button>
+  </section>
+
+  <!-- Questions -->
+  <section id="quiz" class="hidden">
+    <p id="questionNumber" class="small"></p>
+    <div class="progress"><div id="progressBar"></div></div>
+    <h2 id="questionTitle"></h2>
+    <div id="options"></div>
+    <textarea id="customAnswer"
+      placeholder="Or write your own answer here... (optional)"></textarea>
+    <button id="answerButton" onclick="saveAnswer()">Submit Answer</button>
+  </section>
+
+  <!-- Compliment -->
+  <section id="complimentScreen" class="hidden">
+    <h1>A little message for you 💌</h1>
+    <div class="compliment" id="complimentText"></div>
+    <button onclick="nextQuestion()">Continue →</button>
+  </section>
+
+  <!-- Gift question -->
+  <section id="giftScreen" class="hidden">
+    <h1>One Last Question 🎀</h1>
+    <h2>If I wanted to give you a gift, what would you like?</h2>
+
+    <div id="giftOptions">
+      <label class="option"><input type="radio" name="gift" value="A good book 📚"> A good book 📚</label>
+      <label class="option"><input type="radio" name="gift" value="Medical accessories 🩺"> Medical accessories 🩺</label>
+      <label class="option"><input type="radio" name="gift" value="Flowers 🌷"> Flowers 🌷</label>
+      <label class="option"><input type="radio" name="gift" value="Chocolate 🍫"> Chocolate 🍫</label>
+      <label class="option"><input type="radio" name="gift" value="A handwritten letter 💌"> A handwritten letter 💌</label>
+      <label class="option"><input type="radio" name="gift" value="A surprise gift 🎁"> A surprise gift 🎁</label>
+    
+    </div>
+
+    <textarea id="customGift" placeholder="Or tell me exactly what you'd like..."></textarea>
+    <button onclick="goToFinal()">Next →</button>
+  </section>
+
+  <!-- Final compliment -->
+  <section id="finalScreen" class="hidden">
+    <h1>Now it's your turn! 💜</h1>
+    <p>
+      Before you leave, write one compliment or a few words
+.
+    </p>
+    <textarea id="creatorCompliment"
+      placeholder="Something you'd like to say..."></textarea>
+    <button onclick="submitResponse()">Send My Response 💌</button>
+  </section>
+
+  <!-- Finished -->
+  <section id="doneScreen" class="hidden">
+    <h1>Thank You! 💜</h1>
+    <div class="gift">🌷</div>
+    <p>Your answers have been submitted.</p>
+    <p>Maybe the best surprises come from unexpected friendships.</p>
+    <p class="small">Made with care ✨</p>
+  </section>
+
+</div>
+
+<script>
+
+// 1. IMPORTANT: Paste your Google Apps Script Web App URL here.
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyMA0QBRLmm3AXm-2SkkiNtd39Ii_OEO3PexjNtCKxnWaL4nwIk5keHImmGZo8X9SB7/exec";
+
+// 2. Change this to your name.
+const creatorName = "Moyen Ahmed";
+
+// 3. Eight questions and their personalized compliments.
+const questions = [
+
+{
+  question: "How would you describe your personality?",
+  options: [
+    ["Introvert", "Quiet people often have the most interesting worlds inside them. 💜"],
+    ["Extrovert", "Your energy probably makes ordinary moments more exciting! ✨"],
+    ["A little bit of both", "A beautiful balance of calmness and energy! 🌷"],
+    ["Still figuring myself out", "That's perfectly fine. Growing is part of the adventure! 💫"]
+  ]
+},
+
+{
+  question: "What's your most lovable quality?",
+  options: [
+    ["Kindness", "Kindness is a beautiful strength. Never lose that part of yourself. 💜"],
+    ["Sense of humor", "The ability to make people smile is a special gift! 😄"],
+    ["Confidence", "Believe in yourself. Your dreams deserve that confidence! ✨"],
+    ["Patience", "A patient heart can make a big difference in someone's life. 🌸"]
+  ]
+},
+
+{
+  question: "What makes your day better?",
+  options: [
+    ["Music", "Sometimes a good song understands us better than words. 🎵"],
+    ["Talking to loved ones", "You clearly value the people who make life meaningful. 💜"],
+    ["A peaceful moment", "Finding peace in little things is a beautiful quality. 🌷"],
+    ["Achieving a goal", "That determination will take you places. Keep going! 🚀"]
+  ]
+},
+
+{
+  question: "Why did you choose medicine?",
+  options: [
+    ["To help people", "A heart that wants to help others is truly admirable. 🩺"],
+    ["Love for science", "Curiosity is the beginning of great discoveries! 🔬"],
+    ["A childhood dream", "It's wonderful when a childhood dream stays alive. ✨"],
+    ["Still discovering my reason", "Your journey is unique. You don't need to have everything figured out. 💜"]
+  ]
+},
+
+{
+  question: "What's your favorite way to spend free time?",
+  options: [
+    ["Watching movies or series", "A good story can make any day better! 🎬"],
+    ["Reading books", "There is always something magical about getting lost in a book. 📚"],
+    ["Sleeping and relaxing", "Rest is important too. You deserve peaceful moments! 🌙"],
+    ["Going out with friends", "Memories with good people are priceless. 🌷"]
+  ]
+},
+
+{
+  question: "What kind of people do you enjoy being around?",
+  options: [
+    ["Funny people", "Laughter makes even the simplest moments memorable! 😄"],
+    ["Honest people", "Honesty builds the kind of connection that matters. 💜"],
+    ["Supportive people", "Having people who encourage you makes a difference. 🌸"],
+    ["People who understand me", "Being understood without explaining everything is special. ✨"]
+  ]
+},
+
+{
+  question: "What's one dream you really want to achieve?",
+  options: [
+    ["Become a great doctor", "May your hard work turn into something you are proud of! 🩺"],
+    ["Travel around the world", "May you collect beautiful memories from every corner of the world! 🌍"],
+    ["Make my family proud", "That is a meaningful dream. Keep believing in yourself! 💜"],
+    ["Live a happy and peaceful life", "Honestly, that's one of the most beautiful dreams. 🌷"]
+  ]
+},
+
+{
+  question: "What can instantly make you smile?",
+  options: [
+    ["A thoughtful message", "It's the little gestures that sometimes mean the most. 💌"],
+    ["Unexpected surprises", "Then I hope this little surprise made your day! 🎁"],
+    ["Compliments", "You deserve kind words and genuine appreciation. 💜"],
+    ["Someone remembering little things about me", "Being remembered in the little details is truly special. 🌸"]
+  ]
+}
+
+];
+
+let currentQuestion = 0;
+let answers = [];
+let compliments = [];
+
+// Helper: show only one screen.
+function showScreen(id) {
+  document.querySelectorAll(".card > section").forEach(section => {
+    section.classList.add("hidden");
+  });
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function openGift() {
+  showScreen("intro");
+}
+
+function startQuestions() {
+  const name = document.getElementById("friendName").value.trim();
+
+  if (!name) {
+    alert("Please write your name first!");
+    return;
+  }
+
+  currentQuestion = 0;
+  answers = [];
+  compliments = [];
+  showQuestion();
+  showScreen("quiz");
+}
+
+function showQuestion() {
+  const q = questions[currentQuestion];
+
+  document.getElementById("questionNumber").textContent =
+    `QUESTION ${currentQuestion + 1} OF ${questions.length}`;
+
+  document.getElementById("progressBar").style.width =
+    `${(currentQuestion / questions.length) * 100}%`;
+
+  document.getElementById("questionTitle").textContent = q.question;
+
+  document.getElementById("customAnswer").value = "";
+
+  document.getElementById("options").innerHTML =
+    q.options.map((option, index) => `
+      <label class="option">
+        <input type="radio" name="answer" value="${index}">
+        ${option[0]}
+      </label>
+    `).join("");
+}
+
+function saveAnswer() {
+  const selected = document.querySelector('input[name="answer"]:checked');
+  const custom = document.getElementById("customAnswer").value.trim();
+
+  if (!selected && !custom) {
+    alert("Please select an option or write your own answer!");
+    return;
+  }
+
+  let answer = "";
+  let compliment = "";
+
+  if (custom) {
+    answer = custom;
+    compliment =
+      "I love that you shared your own thoughts. Your individuality makes you special! 💜";
+  } else {
+    const option = questions[currentQuestion].options[
+      Number(selected.value)
+    ];
+
+    answer = option[0];
+    compliment = option[1];
+  }
+
+  answers[currentQuestion] = answer;
+  compliments[currentQuestion] = compliment;
+
+  document.getElementById("complimentText").textContent = compliment;
+
+  showScreen("complimentScreen");
+}
+
+function nextQuestion() {
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+    showQuestion();
+    showScreen("quiz");
+  } else {
+    document.getElementById("progressBar").style.width = "100%";
+    showScreen("giftScreen");
+  }
+}
+
+function goToFinal() {
+  const selected = document.querySelector('input[name="gift"]:checked');
+  const custom = document.getElementById("customGift").value.trim();
+
+  if (!selected && !custom) {
+    alert("Please select a gift or write your own choice!");
+    return;
+  }
+
+  showScreen("finalScreen");
+}
+
+async function submitResponse() {
+  const name = document.getElementById("friendName").value.trim();
+  const nickname = document.getElementById("nickname").value.trim();
+  const creatorCompliment =
+    document.getElementById("creatorCompliment").value.trim();
+
+  const selectedGift = document.querySelector('input[name="gift"]:checked');
+  const customGift = document.getElementById("customGift").value.trim();
+
+  if (!creatorCompliment) {
+    alert("Please write a little compliment before submitting!");
+    return;
+  }
+
+  const gift = customGift || (selectedGift ? selectedGift.value : "");
+
+  const payload = {
+    name,
+    nickname,
+    answers,
+    gift,
+    creatorCompliment
+  };
+
+  const button = document.querySelector("#finalScreen button");
+  button.disabled = true;
+  button.textContent = "Sending...";
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    showScreen("doneScreen");
+
+  } catch (error) {
+    alert("Something went wrong. Please check your internet connection and try again.");
+    button.disabled = false;
+    button.textContent = "Send My Response 💌";
+  }
+}
+
+</script>
+</body>
+</html>
